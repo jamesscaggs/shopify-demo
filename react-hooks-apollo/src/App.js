@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useQuery, useMutation } from '@apollo/react-hooks';
-import Product from './components/Product';
-import Cart from './components/Cart';
-import CustomerAuthWithMutation from './components/CustomerAuth';
-import gql from 'graphql-tag';
+import React, { useState, useEffect } from "react";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import Product from "./components/Product";
+import Cart from "./components/Cart";
+import CustomerAuthWithMutation from "./components/CustomerAuth";
+import gql from "graphql-tag";
 import {
   useCheckoutEffect,
   createCheckout,
@@ -11,14 +11,14 @@ import {
   checkoutLineItemsUpdate,
   checkoutLineItemsRemove,
   checkoutCustomerAssociate,
-} from './checkout';
+} from "./checkout";
 
 const query = gql`
   query query {
     shop {
       name
       description
-      products(first:20) {
+      products(first: 20) {
         pageInfo {
           hasNextPage
           hasPreviousPage
@@ -70,120 +70,119 @@ const query = gql`
   }
 `;
 
-function App(props){
+function App(props) {
+  console.log(process.env.REACT_APP_TEST);
 
-  const [isCartOpen,setCartOpen] = useState(false);
-  const [isNewCustomer,setNewCustomer] = useState(false);
-  const [isCustomerAuthOpen,setCustomerAuthOpen] = useState(false);
-  const [showAccountVerificationMessage,setAccountVerificationMessage] = useState(false);
-  const [checkout,setCheckout] = useState({ lineItems: { edges: [] }});
+  const [isCartOpen, setCartOpen] = useState(false);
+  const [isNewCustomer, setNewCustomer] = useState(false);
+  const [isCustomerAuthOpen, setCustomerAuthOpen] = useState(false);
+  const [showAccountVerificationMessage, setAccountVerificationMessage] = useState(false);
+  const [checkout, setCheckout] = useState({ lineItems: { edges: [] } });
 
   const [customerAccessToken, setCustomerAccessToken] = useState(null);
 
-  const [createCheckoutMutation,
-  {
-    data: createCheckoutData,
-    loading: createCheckoutLoading,
-    error: createCheckoutError
-  }] = useMutation(createCheckout);
+  const [
+    createCheckoutMutation,
+    { data: createCheckoutData, loading: createCheckoutLoading, error: createCheckoutError },
+  ] = useMutation(createCheckout);
 
-  const [lineItemAddMutation,
-  {
-    data: lineItemAddData,
-    loading: lineItemAddLoading,
-    error: lineItemAddError
-  }] = useMutation(checkoutLineItemsAdd);
+  const [
+    lineItemAddMutation,
+    { data: lineItemAddData, loading: lineItemAddLoading, error: lineItemAddError },
+  ] = useMutation(checkoutLineItemsAdd);
 
-  const [lineItemUpdateMutation,
-  {
-    data: lineItemUpdateData,
-    loading: lineItemUpdateLoading,
-    error: lineItemUpdateError
-  }] = useMutation(checkoutLineItemsUpdate);
+  const [
+    lineItemUpdateMutation,
+    { data: lineItemUpdateData, loading: lineItemUpdateLoading, error: lineItemUpdateError },
+  ] = useMutation(checkoutLineItemsUpdate);
 
-  const [lineItemRemoveMutation,
-  {
-    data: lineItemRemoveData,
-    loading: lineItemRemoveLoading,
-    error: lineItemRemoveError
-  }] = useMutation(checkoutLineItemsRemove);
+  const [
+    lineItemRemoveMutation,
+    { data: lineItemRemoveData, loading: lineItemRemoveLoading, error: lineItemRemoveError },
+  ] = useMutation(checkoutLineItemsRemove);
 
-  const [customerAssociateMutation,
-  {
-    data: customerAssociateData,
-    loading: customerAssociateLoading,
-    error: customerAssociateError
-  }] = useMutation(checkoutCustomerAssociate);
+  const [
+    customerAssociateMutation,
+    {
+      data: customerAssociateData,
+      loading: customerAssociateLoading,
+      error: customerAssociateError,
+    },
+  ] = useMutation(checkoutCustomerAssociate);
 
-  const { loading:shopLoading, error:shopError, data:shopData } = useQuery(query);
+  const { loading: shopLoading, error: shopError, data: shopData } = useQuery(query);
 
   useEffect(() => {
     const variables = { input: {} };
     createCheckoutMutation({ variables }).then(
-      res => {
-        console.log( res );
+      (res) => {
+        console.log(res);
       },
-      err => {
-        console.log('create checkout error', err );
+      (err) => {
+        console.log("create checkout error", err);
       }
     );
-
   }, []);
 
-  useCheckoutEffect(createCheckoutData, 'checkoutCreate', setCheckout);
-  useCheckoutEffect(lineItemAddData, 'checkoutLineItemsAdd', setCheckout);
-  useCheckoutEffect(lineItemUpdateData, 'checkoutLineItemsUpdate', setCheckout);
-  useCheckoutEffect(lineItemRemoveData, 'checkoutLineItemsRemove', setCheckout);
-  useCheckoutEffect(customerAssociateData, 'checkoutCustomerAssociate', setCheckout);
+  useCheckoutEffect(createCheckoutData, "checkoutCreate", setCheckout);
+  useCheckoutEffect(lineItemAddData, "checkoutLineItemsAdd", setCheckout);
+  useCheckoutEffect(lineItemUpdateData, "checkoutLineItemsUpdate", setCheckout);
+  useCheckoutEffect(lineItemRemoveData, "checkoutLineItemsRemove", setCheckout);
+  useCheckoutEffect(customerAssociateData, "checkoutCustomerAssociate", setCheckout);
 
   const handleCartClose = () => {
-    setCartOpen( false );
+    setCartOpen(false);
   };
 
   const openCustomerAuth = (event) => {
-    if (event.target.getAttribute('data-customer-type') === "new-customer") {
-      setNewCustomer( true );
-      setCustomerAuthOpen( true );
+    if (event.target.getAttribute("data-customer-type") === "new-customer") {
+      setNewCustomer(true);
+      setCustomerAuthOpen(true);
     } else {
-      setNewCustomer( false );
-      setCustomerAuthOpen( true );
+      setNewCustomer(false);
+      setCustomerAuthOpen(true);
     }
   };
 
   const accountVerificationMessage = () => {
-    setAccountVerificationMessage(true)
+    setAccountVerificationMessage(true);
     setTimeout(() => {
-      setAccountVerificationMessage(false)
-   }, 5000);
+      setAccountVerificationMessage(false);
+    }, 5000);
   };
 
   const closeCustomerAuth = () => {
     setCustomerAuthOpen(false);
   };
 
-  const addVariantToCart = (variantId, quantity) =>{
-    const variables = { checkoutId:checkout.id, lineItems:  [{variantId, quantity: parseInt(quantity, 10)}] };
+  const addVariantToCart = (variantId, quantity) => {
+    const variables = {
+      checkoutId: checkout.id,
+      lineItems: [{ variantId, quantity: parseInt(quantity, 10) }],
+    };
     // TODO replace for each mutation in the checkout thingy. can we export them from there???
     // create your own custom hook???
 
-    lineItemAddMutation({ variables }).then(res => {
-        setCartOpen(true);
+    lineItemAddMutation({ variables }).then((res) => {
+      setCartOpen(true);
     });
   };
 
   const updateLineItemInCart = (lineItemId, quantity) => {
-    const variables = { checkoutId:checkout.id, lineItems: [{id: lineItemId, quantity: parseInt(quantity, 10)}] };
+    const variables = {
+      checkoutId: checkout.id,
+      lineItems: [{ id: lineItemId, quantity: parseInt(quantity, 10) }],
+    };
     lineItemUpdateMutation({ variables });
   };
 
   const removeLineItemInCart = (lineItemId) => {
-    const variables = { checkoutId:checkout.id, lineItemIds: [lineItemId] };
+    const variables = { checkoutId: checkout.id, lineItemIds: [lineItemId] };
     lineItemRemoveMutation({ variables });
   };
 
   const associateCustomerCheckout = (customerAccessToken) => {
-
-    const variables = { checkoutId:checkout.id, customerAccessToken: customerAccessToken };
+    const variables = { checkoutId: checkout.id, customerAccessToken: customerAccessToken };
     customerAssociateMutation({ variables }).then((res) => {
       setCustomerAuthOpen(false);
     });
@@ -198,9 +197,15 @@ function App(props){
   }
 
   return (
-    <div className="App">
-      <div className="Flash__message-wrapper">
-        <p className={`Flash__message ${showAccountVerificationMessage ? 'Flash__message--open' : ''}`}>We have sent you an email, please click the link included to verify your email address</p>
+    <div className='App'>
+      <div className='Flash__message-wrapper'>
+        <p
+          className={`Flash__message ${
+            showAccountVerificationMessage ? "Flash__message--open" : ""
+          }`}
+        >
+          We have sent you an email, please click the link included to verify your email address
+        </p>
       </div>
       <CustomerAuthWithMutation
         closeCustomerAuth={closeCustomerAuth}
@@ -209,25 +214,40 @@ function App(props){
         associateCustomerCheckout={associateCustomerCheckout}
         showAccountVerificationMessage={accountVerificationMessage}
       />
-      <header className="App__header">
-        <ul className="App__nav">
-          <li className="button App__customer-actions" onClick={openCustomerAuth} data-customer-type="new-customer">Create an Account</li>
-          <li className="login App__customer-actions" onClick={openCustomerAuth}>Log in</li>
+      <header className='App__header'>
+        <ul className='App__nav'>
+          <li
+            className='button App__customer-actions'
+            onClick={openCustomerAuth}
+            data-customer-type='new-customer'
+          >
+            Create an Account
+          </li>
+          <li className='login App__customer-actions' onClick={openCustomerAuth}>
+            Log in
+          </li>
         </ul>
-        {!isCartOpen &&
-          <div className="App__view-cart-wrapper">
-            <button className="App__view-cart" onClick={()=> setCartOpen( true )}>Cart</button>
+        {!isCartOpen && (
+          <div className='App__view-cart-wrapper'>
+            <button className='App__view-cart' onClick={() => setCartOpen(true)}>
+              Cart
+            </button>
           </div>
-        }
-        <div className="App__title">
+        )}
+        <div className='App__title'>
           <h1>{shopData.shop.name}: React Example</h1>
           <h2>{shopData.shop.description}</h2>
         </div>
       </header>
-      <div className="Product-wrapper">
-        { shopData.shop.products.edges.map(product =>
-          <Product addVariantToCart={addVariantToCart} checkout={checkout} key={product.node.id.toString()} product={product.node} />
-        )}
+      <div className='Product-wrapper'>
+        {shopData.shop.products.edges.map((product) => (
+          <Product
+            addVariantToCart={addVariantToCart}
+            checkout={checkout}
+            key={product.node.id.toString()}
+            product={product.node}
+          />
+        ))}
       </div>
       <Cart
         removeLineItemInCart={removeLineItemInCart}
@@ -239,7 +259,6 @@ function App(props){
       />
     </div>
   );
-
 }
 
 export default App;
