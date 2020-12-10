@@ -14,7 +14,7 @@ import {
 } from "./checkout";
 
 const query = gql`
-  query query {
+  query {
     shop {
       name
       description
@@ -71,8 +71,6 @@ const query = gql`
 `;
 
 function App(props) {
-  console.log(process.env.REACT_APP_TEST);
-
   const [isCartOpen, setCartOpen] = useState(false);
   const [isNewCustomer, setNewCustomer] = useState(false);
   const [isCustomerAuthOpen, setCustomerAuthOpen] = useState(false);
@@ -123,6 +121,11 @@ function App(props) {
       }
     );
   }, []);
+
+  useEffect(() => {
+    if (!shopData) return;
+    console.log({ shopData });
+  }, [shopData]);
 
   useCheckoutEffect(createCheckoutData, "checkoutCreate", setCheckout);
   useCheckoutEffect(lineItemAddData, "checkoutLineItemsAdd", setCheckout);
@@ -235,8 +238,8 @@ function App(props) {
           </div>
         )}
         <div className='App__title'>
-          <h1>{shopData.shop.name}: React Example</h1>
-          <h2>{shopData.shop.description}</h2>
+          {/* <h1>{shopData.shop.name}: React Example</h1>
+          <h2>{shopData.shop.description}</h2> */}
         </div>
       </header>
       <div className='Product-wrapper'>
