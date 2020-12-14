@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import Product from "./components/Product";
+import ProductList from "./components/ProductList";
 import Cart from "./components/Cart";
+import Hello from "./components/HelloWorld";
 import CustomerAuthWithMutation from "./components/CustomerAuth";
 import gql from "graphql-tag";
 import {
@@ -260,7 +262,10 @@ function App(props) {
         handleCartClose={handleCartClose}
         customerAccessToken={customerAccessToken}
       />
+     <Hello />
+    
     </div>
+
   );
 }
 
