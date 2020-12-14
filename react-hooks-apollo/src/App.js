@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import Product from "./components/Product";
+import MyProduct from "./components/MyProduct";
 import ProductList from "./components/ProductList";
 import Cart from "./components/Cart";
 import Hello from "./components/HelloWorld";
@@ -246,7 +247,7 @@ function App(props) {
       </header>
       <div className='Product-wrapper'>
         {shopData.shop.products.edges.map((product) => (
-          <Product
+          <MyProduct
             addVariantToCart={addVariantToCart}
             checkout={checkout}
             key={product.node.id.toString()}
@@ -262,10 +263,8 @@ function App(props) {
         handleCartClose={handleCartClose}
         customerAccessToken={customerAccessToken}
       />
-     <Hello />
-    
+      <Hello />
     </div>
-
   );
 }
 
