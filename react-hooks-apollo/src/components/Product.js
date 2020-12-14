@@ -55,11 +55,14 @@ function Product(props) {
   });
 
   return (
+
+    <div className="max-w-sm rounded overflow-hidden shadow-lg">
     <div className='Product'>
       {props.product.images.edges.length ? (
-        <img src={variantImage.src} alt={`${props.product.title} product shot`} />
+        <img className="w-full" src={variantImage.src} alt={`${props.product.title} product shot`} />
       ) : null}
-      <h5 className='Product__title'>{props.product.title}</h5>
+      <h5 className='Product__title font-bold text-black-500 text-xl mb-2'>{props.product.title}</h5>
+      <div className="text-gray-900 text-base">
       <span className='Product__price'>${variant.price}</span>
       {variantSelectors}
       <label className='Product__option'>
@@ -72,12 +75,14 @@ function Product(props) {
         ></input>
       </label>
       <button
-        className='Product__buy button'
+        className='Product__buy button flex-shrink-0 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg mt-10 sm:mt-0'
         onClick={() => props.addVariantToCart(variant.id, variantQuantity)}
       >
         Add to Cart
       </button>
+      </div>
     </div>
+  </div>
   );
 }
 
